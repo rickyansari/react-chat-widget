@@ -18,18 +18,30 @@ export default class App extends Component {
     console.log(WS);
     WS.on("new_message", (newMessage) => {
       debugger;
+
       if (newMessage.actor === "bot") {
-        addResponseMessage(newMessage.message);
+        console.log("bot message", newMessage);
+        if (newMessage.input_type === "button") {
+          setQuickButtons(
+            newMessage.message.buttons.map((button) => ({
+              label: button.text,
+              value: button.value,
+            }))
+          );
+          return addResponseMessage(newMessage.message.message);
+        } else {
+          addResponseMessage(newMessage.message);
+        }
       }
     });
-    addResponseMessage("Welcome to this awesome chat!");
-    addLinkSnippet({ link: "https://google.com", title: "Google" });
-    addResponseMessage(
-      "![](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)"
-    );
-    addResponseMessage(
-      "![vertical](https://d2sofvawe08yqg.cloudfront.net/reintroducing-react/hero2x?1556470143)"
-    );
+    // addResponseMessage("Welcome to this awesome chat!");
+    // addLinkSnippet({ link: "https://google.com", title: "Google" });
+    // addResponseMessage(
+    //   "![](https://raw.githubusercontent.com/Wolox/press-kit/master/logos/logo_banner.png)"
+    // );
+    // addResponseMessage(
+    //   "![vertical](https://d2sofvawe08yqg.cloudfront.net/reintroducing-react/hero2x?1556470143)"
+    // );
   }
 
   handleNewUserMessage = (newMessage: any) => {
@@ -43,19 +55,19 @@ export default class App extends Component {
     };
     debugger;
     WS.emit("new_message", userMessage);
-    setTimeout(() => {
-      toggleMsgLoader();
-      if (newMessage === "fruits") {
-        setQuickButtons([
-          { label: "Apple", value: "apple" },
-          { label: "Orange", value: "orange" },
-          { label: "Pear", value: "pear" },
-          { label: "Banana", value: "banana" },
-        ]);
-      } else {
-        addResponseMessage(newMessage);
-      }
-    }, 2000);
+    // setTimeout(() => {
+    //   toggleMsgLoader();
+    //   if (newMessage === "fruits") {
+    //     setQuickButtons([
+    //       { label: "Apple", value: "apple" },
+    //       { label: "Orange", value: "orange" },
+    //       { label: "Pear", value: "pear" },
+    //       { label: "Banana", value: "banana" },
+    //     ]);
+    //   } else {
+    //     addResponseMessage(newMessage);
+    //   }
+    // }, 2000);
   };
 
   handleQuickButtonClicked = (e: any) => {
@@ -88,9 +100,9 @@ export default class App extends Component {
     return (
       <div>
         <Widget
-          title="Bienvenido"
-          subtitle="Asistente virtual"
-          senderPlaceHolder="Escribe aquí ..."
+          title="Omni Health"
+          subtitle=""
+          senderPlaceHolder="Message ..."
           handleNewUserMessage={this.handleNewUserMessage}
           handleQuickButtonClicked={this.handleQuickButtonClicked}
           imagePreview
